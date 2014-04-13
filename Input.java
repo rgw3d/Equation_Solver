@@ -2,7 +2,9 @@
  * Equation solver.  
  * read the Readme if you must
  * nothing special
- */
+ */ 
+
+
 import java.util.Scanner;
 public class Input
 {

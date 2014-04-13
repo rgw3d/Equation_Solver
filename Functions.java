@@ -2,6 +2,8 @@
  * all the important stuff is in here
  * yay
  */
+
+
 import java.util.Scanner;
 import java.util.Arrays;
 public class Functions
