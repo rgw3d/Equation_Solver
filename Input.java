@@ -9,11 +9,20 @@ public class Input
     public static void main(String args[])
     {            
         System.out.println("Input your equation");
-        String originalInput=simplifyInput(new Scanner(System.in).nextLine());//get and simplify the input
         
-        Scanner to_delim=new Scanner(originalInput).useDelimiter("=");// set delimiter to be a =.  to get both sides  
-        String leftSide=to_delim.next();        
-        String rightSide=to_delim.next();
+        String originalInput = new Scanner(System.in).nextLine(); //Get input
+        
+        //Checking if input is an equation
+        if(!isEquation(originalInput)){
+            System.out.println("Please enter an equation");
+            return;
+        }
+        
+        originalInput = simplifyInput(originalInput);
+        
+        //Scanner to_delim=new Scanner(originalInput).useDelimiter("=");// set delimiter to be a =.  to get both sides  
+        String leftSide = originalInput.substring(0, originalInput.indexOf('=') - 1);    
+        String rightSide = originalInput.substring(originalInput.indexOf('=') + 1);
         
         System.out.println(leftSide+" Left Side of the equation");//displays the left
         System.out.println(rightSide+" Right Side of the equation");//displays the right 
@@ -30,12 +39,23 @@ public class Input
         
         
     }
+    public static boolean isEquation(String equation){
+        if(!(equation.contains("=")))//Not enough = signs!
+            return false;
+        
+        if(equation.indexOf('=', equation.indexOf('=') != -1)//Too many = signs!
+            return false;
+        
+    }
+    
     public static String simplifyInput(String fix)
     {
+        /*That's bad practice! Sanitize your input!
         if(!(fix.contains("=")))//it needs to have a equals sign
             fix=fix+"=0";
-            
-        fix=fix.replace(" ","");//space is bad
+        */
+        
+        fix=fix.replace(" ","");//Geting rid of spaces
         
         fix=fix.replace("--","+"); //minus a minus is addition.  make it simple
         
