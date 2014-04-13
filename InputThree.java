@@ -21,9 +21,9 @@ public class InputThree
         
         originalInput = simplifyInput(originalInput);
         
-        Scanner to_delim=new Scanner(originalInput).useDelimiter("=");// set delimiter to be a =.  to get both sides  
-        String leftSide=to_delim.next();        
-        String rightSide=to_delim.next();
+        //Scanner to_delim=new Scanner(originalInput).useDelimiter("=");// set delimiter to be a =.  to get both sides  
+        String leftSide = originalInput.substring(0, originalInput.indexOf('=') - 1);    
+        String rightSide = originalInput.substring(originalInput.indexOf('=') + 1);
         
         System.out.println(leftSide+" Left Side of the equation");//displays the left
         System.out.println(rightSide+" Right Side of the equation");//displays the right 
@@ -52,8 +52,12 @@ public class InputThree
         
     }
     public static boolean isEquation(String equation){
-        if(!(equation.contains("=")))
+        if(!(equation.contains("=")))//Not enough = signs!
             return false;
+        
+        if(equation.indexOf('=', equation.indexOf('=') != -1)//Too many = signs!
+            return false;
+        
     }
     
     public static String simplifyInput(String fix)
