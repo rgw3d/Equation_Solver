@@ -13,22 +13,21 @@ public class Input
         String originalInput = new Scanner(System.in).nextLine(); //Get input
         
         //Checking if input is an equation
-        if(!isEquation(originalInput)){
-            System.out.println("Please enter an equation");
+        if(!isEquation(originalInput))
+        {
+            System.out.println("Please enter an equation next time");
             return;
         }
-        
         originalInput = simplifyInput(originalInput);
         
-        //Scanner to_delim=new Scanner(originalInput).useDelimiter("=");// set delimiter to be a =.  to get both sides  
-        String leftSide = originalInput.substring(0, originalInput.indexOf('=') - 1);    
+        
+        String leftSide = originalInput.substring(0, originalInput.indexOf('=') - 1);//get each side 
         String rightSide = originalInput.substring(originalInput.indexOf('=') + 1);
         
         System.out.println(leftSide+" Left Side of the equation");//displays the left
         System.out.println(rightSide+" Right Side of the equation");//displays the right 
         
         //will work its way down, I only need to call parethesis() because it has calls to the other methods
-        
         leftSide=Functions.parenthesis(leftSide);//call parenthesis even if there are no parentheses
         //it has calls to the other methods.
         
@@ -43,23 +42,20 @@ public class Input
         if(!(equation.contains("=")))//Not enough = signs!
             return false;
         
-        if(equation.indexOf('=', equation.indexOf('=') != -1)//Too many = signs!
+        if(equation.indexOf('=', equation.indexOf('=')) != -1)//Too many = signs!
             return false;
-        
+        return true;
     }
     
     public static String simplifyInput(String fix)
     {
-        /*That's bad practice! Sanitize your input!
-        if(!(fix.contains("=")))//it needs to have a equals sign
-            fix=fix+"=0";
-        */
-        
         fix=fix.replace(" ","");//Geting rid of spaces
         
         fix=fix.replace("--","+"); //minus a minus is addition.  make it simple
         
         fix=fix.replace("-","+-");  //replace a negative with just plus a minus.  makes it easier
+        
+        fix=fix.replace("X","x");
         
         //this will be updated later as I fix all the syntax errors that come with exponents and parentheses
         
