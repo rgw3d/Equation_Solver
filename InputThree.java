@@ -10,7 +10,16 @@ public class InputThree
     public static void main(String args[])
     {            
         System.out.println("Input your equation");
-        String originalInput=simplifyInput(new Scanner(System.in).nextLine());//get and simplify the input
+        
+        String originalInput = new Scanner(System.in).nextLine(); //Get input
+        
+        //Checking if input is an equation
+        if(!isEquation(originalInput)){
+            System.out.println("Please enter an equation");
+            return;
+        }
+        
+        originalInput = simplifyInput(originalInput);
         
         Scanner to_delim=new Scanner(originalInput).useDelimiter("=");// set delimiter to be a =.  to get both sides  
         String leftSide=to_delim.next();        
@@ -42,12 +51,19 @@ public class InputThree
         
         
     }
+    public static boolean isEquation(String equation){
+        if(!(equation.contains("=")))
+            return false;
+    }
+    
     public static String simplifyInput(String fix)
     {
+        /*That's bad practice! Sanitize your input!
         if(!(fix.contains("=")))//it needs to have a equals sign
             fix=fix+"=0";
-            
-        fix=fix.replace(" ","");//space is bad
+        */
+        
+        fix=fix.replace(" ","");//Geting rid of spaces
         
         fix=fix.replace("--","+"); //minus a minus is addition.  make it simple
         
