@@ -46,9 +46,12 @@ public class Functions
         double toReturn=0;
         for(String varName: equation)//yay enhanced for loop
         {
-            if(!(varName.contains("x"))&&!(varName.contains(""))) //if it does not contain an x
+            if(!(varName.contains("x"))&&!(varName.contains("^"))) //if it does not contain an x
             {
-                toReturn=toReturn+new Scanner(varName).nextDouble();
+                if(varName.equals("x")||varName.equals("-x"))                
+                    toReturn=toReturn+new Scanner(varName.replace("x","1")).nextDouble();                
+                else
+                    toReturn=toReturn+new Scanner(varName.replace("x","")).nextDouble();
             }
         }
         
@@ -66,7 +69,7 @@ public class Functions
             }
         }
         
-        return toReturn;
+        return 0;
     }
     public static double threeX(String s)
     {
@@ -80,7 +83,7 @@ public class Functions
             }
         }
         
-        return toReturn;
+        return 0;
     }
     public static double fourX(String s)
     {
@@ -94,7 +97,7 @@ public class Functions
             }
         }
         
-        return toReturn;
+        return 0;
     }
     
     
