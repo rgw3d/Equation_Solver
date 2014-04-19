@@ -29,6 +29,7 @@ public class Input_new
         
         ArrayList left= parseObjects(leftSide);
         ArrayList right= parseObjects(rightSide);//returns an array list of all the objects
+        System.out.println(left);
         
         //Now we have the list.  Time to simplify
         
@@ -75,19 +76,40 @@ public class Input_new
         while(charBychar.hasNext())
         {
             temp=charBychar.next();
-            if(isSpecialCharacter(temp))
+            if(isOperator(temp))//if it is one of the operators
             {
-                if(!stringToChange.equals(""))
+                if(!stringToChange.equals(""))//if the stringToChange string is not empty
                 {
-                    theList.add(new Nomial(stringToChange));
-                    stringToChange="";
+                    theList.add(new Nomial(stringToChange));//add nomial
+                    stringToChange="";//set it back to nothing
                 }
-                if(temp.equals("(")||temp.equals(")"))
+                /*if(temp.equals("(")||temp.equals(")"))
                     theList.add(new Parenthesis(temp));//add the object
-                else
-                
+                else*/
                     theList.add(new Operator(temp));//add the object
                 continue;
+            }
+            else if(temp.equals("("))//if it is the start of a parenthesis
+            {
+                String oneParenthesis="(";
+                int otherOpen=0;
+                int otherClosed=0;
+                String parenTemp="";
+                while(charBychar.hasNext())
+                {
+                    parenTemp= charBychar.next();
+                    if(parenTemp.equals("("))
+                        otherOpen++;
+                    else if(parenTemp.equals(")"))
+                        otherClosed++;
+                    oneParenthesis+=parenTemp;
+                    if(otherClosed==otherOpen+1)//this means that they are equal number
+                    {
+                        theList.add(new Parenthesis(oneParenthesis));
+                        break;
+                    }
+                    
+                }
             }
             else
             {
@@ -102,19 +124,54 @@ public class Input_new
         
         return theList;
     }
-    public static boolean isSpecialCharacter(String temp)
+    public static boolean isOperator(String temp)
     {
-        if(temp.equals("+")||temp.equals("/")||temp.equals("*")||temp.equals("(")||temp.equals(")"))
+        if(temp.equals("+")||temp.equals("/")||temp.equals("*"))//||temp.equals("(")||temp.equals(")")
             return true;
         else
             return false;
     }
     public static void simplify(ArrayList toSimplify)
     {
-        findParenthesis(toSimplify);
+        
+        ArrayList<Integer>parenIndx=findParenthesis(toSimplify);//get the indexs of everthing
+        if(!parenIndx.isEmpty())//if it is not empty
+            solveParenthesis(parenIndx, toSimplify);
+        
+        
+            
+        
+    
+        
+        //findParenthesis(toSimplify);
     }
-    public static int findParenthesis(ArrayList x)
+    public static ArrayList<Integer> findParenthesis(ArrayList tempToSimplify)
     {
-        return 1;
+        ArrayList<Integer>tempParenIndx= new ArrayList<Integer>();
+        for(int indx=0; indx<tempToSimplify.size(); indx++)
+        {
+            if(tempToSimplify.get(indx) instanceof Parenthesis)
+            {
+                tempParenIndx.add(indx);
+            }
+        }
+        return tempParenIndx;
+    }
+    public static void solveParenthesis(ArrayList<Integer> parenIndx, ArrayList toSimplify )
+    {
+        //what it needs to do is find one paenthesis (maybe just return a coords? n
+        
+        /*int left=(int)toSimplify.get(leftSide);
+        
+        int right=0;
+        for(int indx=left; indx)
+        {
+            Parenthesis tempParen = (Parenthesis)toSimplify.get(indx);
+            if(tempParen.getValue())
+            {
+                
+            }
+        }
+        */
     }
 }

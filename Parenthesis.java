@@ -1,17 +1,18 @@
 /**
  * Just outlining a few things
  */
+import java.util.ArrayList;
 public class Parenthesis
 {
-    public Parenthesis(String oneOrTheOther)
+    public Parenthesis(String insideValue)
     {
-        if(oneOrTheOther.equals("("))
-            open=true;
-        else
-            open=false;
-        
+        System.out.println("yay"+insideValue);
+        inside= Input_new.parseObjects(insideValue.substring(1,insideValue.length()-1));//send it without the surrounding parenthesis
+        System.out.println(inside);
     }
+    
     private boolean open;
+    private ArrayList inside= new ArrayList();
     
     
 }
