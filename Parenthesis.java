@@ -3,9 +3,12 @@
  */
 public class Parenthesis
 {
-    public Parenthesis(boolean isOpen)
+    public Parenthesis(String oneOrTheOther)
     {
-        open=isOpen;
+        if(oneOrTheOther.equals("("))
+            open=true;
+        else
+            open=false;
         
     }
     private boolean open;

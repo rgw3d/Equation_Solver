@@ -1,21 +1,15 @@
 /**
- * This class will contain the operators 
- * I may want to use Enums for this
+ * Im not sure If I will use this or another class
  */
-public enum Operator
+public class Operator
 {
-    MULT("*"),
-    ADD("+"),
-    DIV("-");
-    
-    Operator(String s)
+    public Operator(String s)
     {
-        theOperator=s;
+       theOperator=s;
     }
-    private final String theOperator;
-    
     public String getOperator()
     {
         return theOperator;
     }
+    private String theOperator="";
 }
