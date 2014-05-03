@@ -7,7 +7,6 @@
 
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.EnumSet;
 public class Input_new
 {
     public static void main(String args[])
@@ -29,14 +28,16 @@ public class Input_new
         
         ArrayList left= parseObjects(leftSide);
         ArrayList right= parseObjects(rightSide);//returns an array list of all the objects
-        System.out.println(left);
         
         //Now we have the list.  Time to simplify
         
-        simplify(left);
-        simplify(right);
+        ArrayList<Nomial> leftFinal=Simplify.simplify(left);
         
+        System.out.println(leftFinal);
+        ArrayList<Nomial> rightFinal=Simplify.simplify(right);
+        System.out.println(rightFinal);
         
+        Solve.solve(leftFinal,rightFinal);
         
         
         
@@ -60,6 +61,8 @@ public class Input_new
         fix=fix.replace("-","+-");  //replace a negative with just plus a minus. 
         
         fix=fix.replace("X","x");
+        
+        fix=fix.replace("^+-","^-"); //common error that happens after one of the above methods run. negative exponents
         
         //this will be updated later as I fix all the syntax errors that come with exponents and parentheses
                 
@@ -108,7 +111,6 @@ public class Input_new
                         theList.add(new Parenthesis(oneParenthesis));
                         break;
                     }
-                    
                 }
             }
             else
@@ -121,7 +123,6 @@ public class Input_new
             theList.add(new Nomial(stringToChange));
             stringToChange="";
         }
-        
         return theList;
     }
     public static boolean isOperator(String temp)
@@ -131,47 +132,8 @@ public class Input_new
         else
             return false;
     }
-    public static void simplify(ArrayList toSimplify)
-    {
-        
-        ArrayList<Integer>parenIndx=findParenthesis(toSimplify);//get the indexs of everthing
-        if(!parenIndx.isEmpty())//if it is not empty
-            solveParenthesis(parenIndx, toSimplify);
-        
-        
-            
-        
     
-        
-        //findParenthesis(toSimplify);
-    }
-    public static ArrayList<Integer> findParenthesis(ArrayList tempToSimplify)
-    {
-        ArrayList<Integer>tempParenIndx= new ArrayList<Integer>();
-        for(int indx=0; indx<tempToSimplify.size(); indx++)
-        {
-            if(tempToSimplify.get(indx) instanceof Parenthesis)
-            {
-                tempParenIndx.add(indx);
-            }
-        }
-        return tempParenIndx;
-    }
-    public static void solveParenthesis(ArrayList<Integer> parenIndx, ArrayList toSimplify )
-    {
-        //what it needs to do is find one paenthesis (maybe just return a coords? n
-        
-        /*int left=(int)toSimplify.get(leftSide);
-        
-        int right=0;
-        for(int indx=left; indx)
-        {
-            Parenthesis tempParen = (Parenthesis)toSimplify.get(indx);
-            if(tempParen.getValue())
-            {
-                
-            }
-        }
-        */
-    }
+    
+    
+   
 }

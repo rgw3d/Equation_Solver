@@ -2,7 +2,7 @@
  * 
  */
 import java.util.Scanner;
-public class Nomial
+public class Nomial implements Comparable
 {
     private String rawInput;
     private double varExponent=0;
@@ -12,6 +12,14 @@ public class Nomial
     private boolean containedCarrot=false;
     private int varCarrot=-1;
     private int numCarrot=-1;
+    public Nomial(double varEx, double countTemp)//seondary constructor
+    {
+        varExponent=varEx;
+        count=countTemp;
+        if(varExponent!=0)
+            var=true;
+        System.out.println("New Constructor   Variable Exponent"+varExponent+ "   "+"number Count"+count);
+    }
     public Nomial(String s)
     {     
         rawInput=s;
@@ -55,8 +63,16 @@ public class Nomial
     {
         if(rawInput.contains("x^"))
         {
-            varCarrot=rawInput.indexOf("x^");
-            varExponent=Integer.parseInt(rawInput.charAt(varCarrot+2)+"");
+            if(rawInput.contains("x^-"))
+            {
+                varCarrot=rawInput.indexOf("x^-");
+                varExponent=Integer.parseInt(rawInput.substring(varCarrot+2,varCarrot+4));
+            }
+            else
+            {
+                varCarrot=rawInput.indexOf("x^");
+                varExponent=Integer.parseInt(rawInput.charAt(varCarrot+2)+"");
+            }
             if(rawInput.lastIndexOf("^")!=rawInput.indexOf("^"))
             {
                 if(rawInput.lastIndexOf("^")>varCarrot)
@@ -68,8 +84,16 @@ public class Nomial
         }
         else
         {
-            numCarrot=rawInput.indexOf("^");
-            numExponent=Integer.parseInt(rawInput.charAt(numCarrot+1)+"");
+            if(rawInput.contains("^-"))
+            {
+                numCarrot=rawInput.indexOf("^-");
+                numExponent=Integer.parseInt(rawInput.substring(numCarrot+1,numCarrot+3));
+            }
+            else
+            {
+                numCarrot=rawInput.indexOf("^");
+                numExponent=Integer.parseInt(rawInput.charAt(numCarrot+1)+"");
+            }
         }            
         containedCarrot=true;
     }
@@ -103,6 +127,48 @@ public class Nomial
             }
         }
     }
+    
+    public double getVarExponent()
+    {
+        return varExponent;
+    }
+    public double getCount()
+    {
+        return count;
+    }
+    public boolean hasVar()
+    {
+        return var;
+    }
+    public void changeCount(double toAdd)
+    {
+        count+=toAdd;
+    }
+    public void makeNegative()
+    {
+        count*=-1;
+    }
+    
+    public int compareTo(Object x)//returns 0 if they are equal
+    {
+        Nomial second=(Nomial)x;
+        int isEqual=-1;        
+        double firstVarValue=getVarExponent();
+        double secondVarValue=second.getVarExponent();
+        if(firstVarValue==secondVarValue)
+            isEqual=0;
+        else
+            isEqual=(int)(firstVarValue-secondVarValue);
+        return isEqual;
+    }
+    
+    public String toString()
+    {
+        String toReturn="count: "+count +" varExponent: "+varExponent;
+        return toReturn;
+    }
+    
+    
 }
 /*
  might be needed

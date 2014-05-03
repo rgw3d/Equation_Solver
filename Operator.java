@@ -7,9 +7,14 @@ public class Operator
     {
        theOperator=s;
     }
-    public String getOperator()
+    public String toString()
     {
         return theOperator;
     }
+    public Operator()
+    {
+        theOperator="+";
+    }
     private String theOperator="";
+    
 }
