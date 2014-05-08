@@ -18,7 +18,6 @@ public class Nomial implements Comparable
         count=countTemp;
         if(varExponent!=0)
             var=true;
-        System.out.println("New Constructor   Variable Exponent"+varExponent+ "   "+"number Count"+count);
     }
     public Nomial(String s)
     {     
@@ -57,7 +56,7 @@ public class Nomial implements Comparable
         
         count=Math.pow(count,numExponent);//raises the count to the number exponent.  no effect if there is a var exponent as well
             
-        System.out.println("Variable Exponent"+varExponent+ "   "+"number Count"+count);
+        //System.out.println("Variable Exponent"+varExponent+ "   "+"number Count"+count);
     }
     private void findCarrots()
     {
@@ -166,6 +165,14 @@ public class Nomial implements Comparable
     {
         String toReturn="count: "+count +" varExponent: "+varExponent;
         return toReturn;
+    }
+    
+    public void fixExponents()//used if there is an varExponent and the count is zero.  changes varExponent to zero
+    {
+        if(count==0&&(varExponent>0||varExponent<0))
+        {
+            varExponent=0;
+        }
     }
     
     

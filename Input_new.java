@@ -23,8 +23,8 @@ public class Input_new
         
         String leftSide = originalInput.substring(0, originalInput.indexOf('='));//get each side 
         String rightSide = originalInput.substring(originalInput.indexOf('=') + 1);
-        System.out.println(leftSide+" Left Side of the equation");//displays the left
-        System.out.println(rightSide+" Right Side of the equation");//displays the right 
+        /*System.out.println(leftSide+" Left Side of the equation");//displays the left
+        System.out.println(rightSide+" Right Side of the equation");//displays the right */
         
         ArrayList left= parseObjects(leftSide);
         ArrayList right= parseObjects(rightSide);//returns an array list of all the objects
@@ -32,10 +32,10 @@ public class Input_new
         //Now we have the list.  Time to simplify
         
         ArrayList<Nomial> leftFinal=Simplify.simplify(left);
-        
-        System.out.println(leftFinal);
         ArrayList<Nomial> rightFinal=Simplify.simplify(right);
-        System.out.println(rightFinal);
+        
+        /*System.out.println("left side:  "+leftFinal);
+        System.out.println("right side: "+rightFinal);*/
         
         Solve.solve(leftFinal,rightFinal);
         

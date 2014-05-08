@@ -68,7 +68,6 @@ public class Simplify
             while(cycleAll.hasNext())
             {
                 Nomial compare2=cycleAll.next();
-                System.out.println(compare2.getVarExponent()+ "    " + compare2);
                 if(compare1.compareTo(compare2)==0)
                 {
                     compare1.changeCount(compare2.getCount());
@@ -81,15 +80,65 @@ public class Simplify
         }
         //if(simplified.size()>1)
            // simplified.remove(simplified.size()-1);
+        simpleFixes(simplified);//removes zeros, exponent errors, and sorts in decending order
+        
         return simplified;
     }
     public static void removeFirst(ListIterator toRemove)
-    {
+    {   //removes the first object in the listIterator and prepares it for the next cyle
         while(toRemove.hasPrevious())
         {
             toRemove.previous();
         }
         toRemove.remove();
+    }
+    public static void simpleFixes(ArrayList<Nomial> toSimplify)
+    {
+        for(int indx=0; indx< toSimplify.size();indx++)
+        {
+            Nomial nom=toSimplify.get(indx);
+            nom.fixExponents();
+            if(nom.getCount()==0)
+            {
+                toSimplify.remove(indx);
+                indx--;
+            }
+        }
+        if(toSimplify.size()==0)//if it has removed every zero, so there is nothing there
+        {
+            toSimplify.add(new Nomial(0,0));
+        }
+        sortDecending(toSimplify);
+    }
+    public static void sortDecending(ArrayList<Nomial> toSimplify)
+    {
+        Nomial itemToInsert;
+        int j;
+        boolean keepGoing;
+        
+        for(int k=1; k<toSimplify.size(); k++)
+        {
+            itemToInsert=toSimplify.get(k);
+            j=k-1;
+            keepGoing=true;
+            while((j>=0)&&keepGoing)
+            {
+                if(itemToInsert.getVarExponent()<toSimplify.get(j).getVarExponent())
+                {
+                    toSimplify.set(j+1,toSimplify.get(j));
+                    j--;
+                    if(j==-1)
+                        toSimplify.set(0,itemToInsert);
+                        
+                }
+                else
+                {
+                    keepGoing=false;
+                    toSimplify.set(j+1,itemToInsert);
+                }
+                
+            }
+        }
     }
 }
 
