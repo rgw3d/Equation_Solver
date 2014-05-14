@@ -52,7 +52,7 @@ public class Simplify
     {
         //just solving addition, there are no other signs so operators in general can be ignored
         //first thing to do is to remove all the operators
-        ArrayList<Nomial> noOperators=new <Nomial>ArrayList();
+        ArrayList<Nomial> noOperators=new ArrayList<Nomial>();
         for(int indx=0; indx<toSimplify.size(); indx++)
         {
             if(toSimplify.get(indx) instanceof Nomial)

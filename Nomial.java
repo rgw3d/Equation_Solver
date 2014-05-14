@@ -98,14 +98,16 @@ public class Nomial implements Comparable
     }
     private void removeCarrots()
     {
-        if(varCarrot>-1)
-            rawInput=rawInput.replace("^"+(int)varExponent," ");//leaves the x and any preceding numbers
-        else if(numCarrot>-1)
-        {
-            rawInput=rawInput.replace("^"+(int)numExponent," ");//leaves any preceding numbers.  
-        }
-        
+        rawInput=rawInput.replace("^"+(int)varExponent," ");
+        rawInput=rawInput.replace("^"+(int)numExponent," ");
+        System.out.println(numExponent);
         rawInput.trim();
+        System.out.println(rawInput);
+        // if(varCarrot>-1)
+            //leaves the x and any preceding numbers
+        //if(numCarrot>-1)
+            //leaves any preceding numbers.  
+        //3^3x^2=0
     }
     private void extractCount()
     {
