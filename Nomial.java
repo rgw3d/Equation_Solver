@@ -74,7 +74,7 @@ public class Nomial implements Comparable
             }
             if(rawInput.lastIndexOf("^")!=rawInput.indexOf("^"))
             {
-                if(rawInput.lastIndexOf("^")>varCarrot)
+                if(rawInput.lastIndexOf("^")>varCarrot+1)
                     numCarrot=rawInput.lastIndexOf("^");
                 else
                     numCarrot=rawInput.indexOf("^");

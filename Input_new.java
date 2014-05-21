@@ -19,10 +19,16 @@ public class Input_new
             System.out.println("Please enter an equation next time");
             return;
         }        
+        
         originalInput = handSanitizer(originalInput);
         
         String leftSide = originalInput.substring(0, originalInput.indexOf('='));//get each side 
         String rightSide = originalInput.substring(originalInput.indexOf('=') + 1);
+        if((!properSyntax(leftSide))||(!(properSyntax(rightSide))))
+        {
+            System.out.println("Improper Syntax!");
+            return;
+        }
         /*System.out.println(leftSide+" Left Side of the equation");//displays the left
         System.out.println(rightSide+" Right Side of the equation");//displays the right */
         
@@ -49,6 +55,13 @@ public class Input_new
             return false;
         
         if(equation.indexOf('=')!= equation.lastIndexOf('='))//Too many = signs!
+            return false;
+        return true;
+    }
+    public static boolean properSyntax(String equation)
+    {
+        String endOfEq=equation.substring(equation.length()-1);
+        if(endOfEq.equals("+")||endOfEq.equals("-")||endOfEq.equals("*")||endOfEq.equals("/"))
             return false;
         return true;
     }

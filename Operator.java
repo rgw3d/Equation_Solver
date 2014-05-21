@@ -15,6 +15,7 @@ public class Operator
     {
         theOperator="+";
     }
+    
     private String theOperator="";
     
 }

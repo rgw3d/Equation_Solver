@@ -23,27 +23,34 @@ public class Solve
         
         //time to figure out endgame strategy 
         double highestExponent=findHighestExponent(allSimplified);//get highest exponent
-        System.out.println(highestExponent);
+        //System.out.println(highestExponent);
         //now time for the important if strucure 
-        if(highestExponent==1)
-        {
-            solveFirstPower(allSimplified);
-        }
-        else if(highestExponent==0)
+        if(highestExponent==0)
         {
             solveNoPower(allSimplified);
         }
+        else if(highestExponent==1)
+        {
+            solveFirstPower(allSimplified);
+        }
+        else if(highestExponent==2)
+        {
+            solveQuadratic(allSimplified);
+        }
         else
         {
-            if(highAndAlone(allSimplified))
+            if(highestExponent<0)
             {
-                solveWithLogs(allSimplified);
+                //do something.  probably solve with logs
+                solveWithLogs(allSimplified);//this might work
             }
-            else if(highestExponent==2)
+            else
             {
-                solveQuadratic(allSimplified);
+                if(highAndAlone(allSimplified))
+                {
+                    solveWithLogs(allSimplified);
+                }
             }
-            
         }
         //Ill have to account for just a random variable with nothing else
         
@@ -124,7 +131,7 @@ public class Solve
         Nomial b=findValue(toSolve, 1);
         Nomial c=findValue(toSolve,0);
         
-        System.out.println("Final Equation: "+a.getCount()+"+x^2 + "+b.getCount()+"x + "+c.getCount());        
+        System.out.println("Final Equation: "+a.getCount()+"x^2 + "+b.getCount()+"x + "+c.getCount());        
         System.out.println("x= "+(-b.getCount()+Math.sqrt(Math.pow(b.getCount(),2)+(-4*a.getCount()*c.getCount())))/(2*a.getCount()));
         System.out.println("x= "+(-b.getCount()-Math.sqrt(Math.pow(b.getCount(),2)+(-4*a.getCount()*c.getCount())))/(2*a.getCount()));
     }
