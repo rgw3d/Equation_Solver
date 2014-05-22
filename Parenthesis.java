@@ -1,8 +1,8 @@
 /**
- * Just outlining a few things
+ * extends the Nomial class because it has numbers in it
  */
 import java.util.ArrayList;
-public class Parenthesis
+public class Parenthesis implements Number
 {
     public Parenthesis(String insideValue)
     {

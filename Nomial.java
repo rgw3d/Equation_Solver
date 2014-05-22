@@ -2,7 +2,8 @@
  * 
  */
 import java.util.Scanner;
-public class Nomial implements Comparable
+import java.util.ArrayList;
+public class Nomial extends Number implements Comparable
 {
     private String rawInput;
     private double varExponent=0;
@@ -136,6 +137,20 @@ public class Nomial implements Comparable
     public double getCount()
     {
         return count;
+    }
+    public boolean canCountInside()
+    {
+        return true;
+    }
+    public ArrayList<Equation> toArrayList()
+    {
+        ArrayList<Equation> tmp= new ArrayList<Equation>();
+        tmp.add(getNomial());
+        return tmp;
+    }
+    public Nomial getNomial()
+    {
+        return new Nomial(getVarExponent(), getCount());
     }
     public boolean hasVar()
     {

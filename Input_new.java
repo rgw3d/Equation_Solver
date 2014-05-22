@@ -1,10 +1,7 @@
 /**
- * The new input class for this project!
- * it is using objects now
- * yay
+ * Attempt number 2 with objects actually using a decent class hierarchy now
  * 
  */
-
 import java.util.Scanner;
 import java.util.ArrayList;
 public class Input_new
