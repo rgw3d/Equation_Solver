@@ -14,11 +14,20 @@ public class Parenthesis
     {
         inside=insideValue;
     }
+    public Parenthesis(Nomial insideValue)
+    {
+        insideNoOperators.add(insideValue);
+    }
     public ArrayList toArrayList()
     {
         return inside;
     }
+    public ArrayList<Nomial> toArrayListWithoutOperators()
+    {
+        return insideNoOperators;
+    }
     private ArrayList inside= new ArrayList();
+    private ArrayList<Nomial> insideNoOperators = new ArrayList<Nomial>();
     
     
 }

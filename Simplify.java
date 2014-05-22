@@ -17,15 +17,12 @@ public class Simplify
         ArrayList toReturn = new ArrayList();
         if(haveParenthesis(toSimplify))
         {
-            //time to solve parenthesis 
-            //only one method call, it then calls the other sub-methods that solve division and addition
-            //toReturn=solveParenthesis(toSimplify);
-            toReturn=solveAddition(solveMultiplication(solveParenthesis(toSimplify)));
+            toReturn=solveAddition(simplifyMultiplication(solveParenthesis(toSimplify)));
         }
         else if(haveMultiplication(toSimplify))//if there is multiplication or division
         {
             //System.out.println("Test\n "+solveMultiplication(toSimplify)+"\n ");
-            toReturn=solveAddition(solveMultiplication(toSimplify));
+            toReturn=solveAddition(simplifyMultiplication(toSimplify));
             //run the multiplication method that solves division as well
         }
         else
@@ -205,26 +202,98 @@ public class Simplify
         }
         return simplified;
     }
-    public static Nomial doMultiplicationOrDivision(ArrayList toMultiply)
+    public static ArrayList simplifyMultiplication(ArrayList toSimplify)
     {
-        Nomial runningTotal;
+        ListIterator cycleAll = toSimplify.listIterator();
+        ArrayList simplified = new ArrayList();
+        while(cycleAll.hasNext())
+        {
+            ArrayList toMultiply = new ArrayList();//this is used below and sent to be simplifed in the multiplication methods
+            Object nTmp;
+            if(cycleAll.next() instanceof Parenthesis)
+            {
+                Parenthesis tmpParen= (Parenthesis)cycleAll.previous();
+                nTmp = tmpParen.toArrayList();
+            }
+            else
+            {
+                nTmp=(Nomial)cycleAll.previous();
+            }
+            cycleAll.next();//move it up
+            boolean addFirst=true;// special case
+            if(cycleAll.hasNext())
+            {
+                while(cycleAll.hasNext())
+                {
+                    if(cycleAll.hasNext() && cycleAll.next() instanceof Operator) 
+                    {
+                        Operator opTmp= (Operator)cycleAll.previous();
+                        cycleAll.next();//move it up
+                        if(cycleAll.hasNext() && (opTmp.toString().equals("*")|| opTmp.toString().equals("/")))
+                        {
+                            Object nTmp2;
+                            if(cycleAll.next() instanceof Parenthesis)
+                            {
+                                Parenthesis tmpParen= (Parenthesis)cycleAll.previous();
+                                nTmp2 = tmpParen.toArrayList();
+                            }
+                            else
+                            {
+                                nTmp2=(Nomial)cycleAll.previous();
+                            }
+                            if(addFirst)//special case where the first object, outside this innerloop, is added on.  can only be added once, so thats why there the boolean.  
+                            {
+                                toMultiply.add(nTmp);
+                                addFirst=false;
+                            }
+                            toMultiply.add(opTmp);
+                            toMultiply.add(nTmp2);
+                        }
+                        else 
+                        {
+                            if(addFirst)
+                                simplified.add(nTmp);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if(addFirst)
+                            simplified.add(nTmp);
+                        break;
+                    }
+                    addFirst=false;
+                }
+            }
+            else
+            {
+                toMultiply.add(nTmp);
+            }
+            //System.out.println(toMultiply);
+            simplified.add(doMultiplicationOrDivision(toMultiply));
+        }
+        return simplified;
+    }
+    public static Parenthesis doMultiplicationOrDivision(ArrayList toMultiply)
+    {
+        Parenthesis runningTotal;
         if(toMultiply.size()==0)
         {
-            return new Nomial(0,0);
+            return new Parenthesis( new Nomial(0,0));
         }
         else 
         {
-            runningTotal = multiply(new Nomial(0,1),(Nomial)toMultiply.get(0));
+            runningTotal = multiply(new Parenthesis(new Nomial(0,1)),new Parenthesis((Nomial)toMultiply.get(0)));
             for(int indx=1; indx<toMultiply.size(); indx+=2)
             {
                 Operator tmp= (Operator)toMultiply.get(indx);
                 if(tmp.toString().equals("*"))
                 {
-                    runningTotal= multiply(runningTotal,(Nomial)toMultiply.get(indx+1));
+                    runningTotal= multiply(runningTotal, new Parenthesis((Nomial)toMultiply.get(indx+1)));
                 }
                 else if(tmp.toString().equals("/"))
                 {
-                    runningTotal= divide(runningTotal, (Nomial)toMultiply.get(indx+1));
+                    runningTotal= divide(runningTotal, new Parenthesis((Nomial)toMultiply.get(indx+1)));
                 }
                 else
                 {
@@ -235,26 +304,133 @@ public class Simplify
         System.out.println(runningTotal);
         return runningTotal;
     }
-    public static Nomial multiply(Nomial x, Nomial y)
+    public static Parenthesis multiply(Parenthesis x, Parenthesis y)
     {
-        return new Nomial(x.getVarExponent()+y.getVarExponent(), x.getCount()*y.getCount());
+        ArrayList runningTotal= new ArrayList();
+        boolean firstPass=true;
+        for(Nomial nom1: x.toArrayListWithoutOperators())
+        {  
+            for(Nomial nom2: y.toArrayListWithoutOperators())
+            {
+                runningTotal.add(new Nomial(nom1.getVarExponent()+nom2.getVarExponent(), nom1.getCount()*nom2.getCount()));
+                
+            }
+        }
+        //runningTotal.remove(runningTotal.size()-1);
+        return new Parenthesis(runningTotal);
     }
-    public static Nomial divide(Nomial x, Nomial y)
+    public static Parenthesis divide(Parenthesis x, Parenthesis y)
+    {   
+        //check to see if I can even divide.
+        x= new Parenthesis(solveAddition(solveMultiplication(x.toArrayList())));
+        y= new Parenthesis(solveAddition(solveMultiplication(y.toArrayList())));
+        int xSize=x.toArrayListWithoutOperators().size();
+        int ySize=y.toArrayListWithoutOperators().size();
+        if(xSize==1&& ySize==1)
+        {
+            return new Parenthesis( new Nomial(x.toArrayListWithoutOperators().get(0).getVarExponent()-y.toArrayListWithoutOperators().get(0).getVarExponent(), x.toArrayListWithoutOperators().get(0).getCount()/y.toArrayListWithoutOperators().get(0).getCount()));
+        }
+        else //Numerator is only one digit
+        {
+            ArrayList<Integer> xConstantFactors=findConstantFactors(x.toArrayListWithoutOperators());
+            ArrayList<Integer> yConstantFactors=findConstantFactors(y.toArrayListWithoutOperators());
+            double xVarMax=findVarFactor(x.toArrayListWithoutOperators());
+            double yVarMax=findVarFactor(y.toArrayListWithoutOperators());
+            double highestVar=xVarMax;
+            if(xVarMax>yVarMax)
+                highestVar=yVarMax;
+            else
+                highestVar=xVarMax;
+            int bestConstantFactor=findBestContantFactors(xConstantFactors, yConstantFactors);
+            Parenthesis top = reduceByDivision(x,highestVar,bestConstantFactor);
+            Parenthesis bottom = reduceByDivision(y, highestVar, bestConstantFactor);
+        }
+        /*
+        else if(xSize>0 && ySize==1)//Denominator is only one digit
+        {
+            ArrayList<Integer> xConstantFactors=findConstantFactors(x.toArrayListWithoutOperators());
+            ArrayList<Integer> yConstantFactors=findConstantFactors(y.toArrayListWithoutOperators());
+            double xVarMax=findVarFactor(x.toArrayListWithoutOperators());
+            double yVarMax=findVarFactor(y.toArrayListWithoutOperators());   
+        }
+        else if(xSize>1 && ySize>1)//both Numerator and Denominator have multiple digits
+        {
+            ArrayList<Integer> xConstantFactors=findConstantFactors(x.toArrayListWithoutOperators());
+            ArrayList<Integer> yConstantFactors=findConstantFactors(y.toArrayListWithoutOperators());
+            double xVarMax=findVarFactor(x.toArrayListWithoutOperators());
+            double yVarMax=findVarFactor(y.toArrayListWithoutOperators());            
+        }
+        */
+        return new Parenthesis( new Nomial(0,0));
+    }
+    public static Parenthesis reduceByDivision(Parenthesis toDivide, double var, int num)
     {
-        return new Nomial(x.getVarExponent()-y.getVarExponent(), x.getCount()/y.getCount());
+        Parenthesis toReturn;
+        ArrayList changes= new ArrayList();
+        for(Nomial toChange: toDivide.toArrayListWithoutOperators())
+        {
+            changes.add(new Nomial(toChange.getVarExponent()-var,toChange.getCount()-num));
+        }
+        toReturn = new Parenthesis(changes);
+        return toReturn;
+    }
+    public static int findBestContantFactors(ArrayList<Integer> top, ArrayList<Integer> bottom)
+    {
+        int highestFactor=1;
+        for(int t: top)
+        {
+            for(int b: bottom)
+            {
+                if(t==b&&t>highestFactor)
+                    highestFactor=t;
+            }
+        }
+        return highestFactor;
+    }
+    public static ArrayList<Integer> findConstantFactors(ArrayList toSearch)
+    {
+        ArrayList<Integer> factors= new ArrayList<Integer>();
+        Nomial tmp = (Nomial)toSearch.get(0);
+        double count=Math.abs(tmp.getCount());
+        
+        for(int indx=0; indx<Math.sqrt(count); indx++)//find factors for the first one
+        {
+            if(count%indx==0)
+            {
+                factors.add(indx);
+                factors.add((int)count/indx);
+            }
+        }
+        for(int indx=0; indx<factors.size(); indx++)//remove any that dont work for everysingle other number
+        {
+            for(int indx2=1; indx2<toSearch.size(); indx2++)
+            {
+                Nomial toCompare = (Nomial)toSearch.get(indx2);
+                if(!(toCompare.getCount()%factors.get(indx)==0))
+                {
+                    factors.remove(indx);
+                    indx--;
+                }
+            }
+        }
+        return factors;
+    }
+    public static double findVarFactor(ArrayList toSearch)
+    {
+        double varMin=10; 
+        for(int indx=0; indx<toSearch.size(); indx++)
+        {
+            Nomial tmp=(Nomial)toSearch.get(indx);
+            if(tmp.getVarExponent()<varMin)
+                varMin=(tmp.getVarExponent());
+        }
+        return varMin;
     }
     /**
      * Solve parenthesis.  lots of recursion up in here.  
      */
     public static ArrayList solveParenthesis(ArrayList toSimplify)
     {
-        ListIterator<Parenthesis> paren= findParenthesis(toSimplify);
-        while(paren.hasNext())
-        {
-            Parenthesis x =paren.next();
-             simplifyIndividualParenthesis(x);
-        }
-        
         ArrayList toReturn = new ArrayList();
         for(int indx=0; indx<toSimplify.size(); indx++)
         {
@@ -276,7 +452,7 @@ public class Simplify
         }
         toReturn=simplify(toSimplify);
         */
-       return toReturn;
+        return toReturn;
     }
     public static Parenthesis simplifyIndividualParenthesis(Parenthesis original)
     {
