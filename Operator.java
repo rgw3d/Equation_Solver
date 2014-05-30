@@ -15,10 +15,9 @@ public class Operator implements Equation
     {
         theOperator="+";
     }
-    public int compareTo(Object x)
+    public int compareTo(Equation x)
     {
-        Operator other = (Operator)x;
-        if(other.toString().equals(toString()))
+        if(x.toString().equals(toString()))
             return 0;
         else
             return -1;

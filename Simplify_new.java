@@ -17,7 +17,7 @@ public class Simplify_new
     public static ArrayList<Equation> simplify_control(ArrayList<Equation> toSimplify)
     {
         ArrayList<Equation> toReturn = new ArrayList<Equation>();
-        if(haveMultiplication(toSimplify))//if there is multiplication or division
+        if(haveMultiplication(toSimplify)|| haveDivision(toSimplify))//if there is multiplication or division
         {
             toReturn=solveMultiplicaiton(toSimplify);
         }
@@ -51,7 +51,20 @@ public class Simplify_new
             if(test instanceof Operator)
             {
                 String theSign=test.toString();
-                if(theSign.equals("*")||theSign.equals("/"))
+                if(theSign.equals("*"))
+                    return true;
+            }
+        }
+        return false;
+    }
+    public static boolean haveDivision(ArrayList<Equation> search)
+    {
+        for(Equation test: search)
+        {
+            if(test instanceof Operator)
+            {
+                String theSign=test.toString();
+                if(theSign.equals("/"))
                     return true;
             }
         }
@@ -65,7 +78,6 @@ public class Simplify_new
         ArrayList<Equation> noOperators=removeOperators(toSimplify);
         
         ArrayList <Equation>simplified = new ArrayList<Equation>();//will be the one that is returned
-        decompressParenthesis(noOperators);//reoves parenthesis if possible
         ListIterator <Equation>cycleAll = noOperators.listIterator();//so noOperators can be cycled through
         while(cycleAll.hasNext())
         {   
@@ -87,7 +99,7 @@ public class Simplify_new
                         cycleAll.next();
                         if(compare1.compareTo(compare2)==0)
                         {
-                            compare1.changeCount(compare2.getCount());
+                            compare1.addToCount(compare2.getCount());
                             cycleAll.remove();//okay so i removed compare 2
                         }
                     }
@@ -100,7 +112,7 @@ public class Simplify_new
         }
         
         simpleFixes(simplified);//removes zeros, exponent errors
-        if(haveParenthesis(simplified)>1)//if there are 2 parenthesis left, they are tested to see if they can be added together. 
+        /*if(haveParenthesis(simplified)>1)//if there are 2 parenthesis left, they are tested to see if they can be added together. 
         {
             ArrayList<Parenthesis_new> allParen = new ArrayList<Parenthesis_new>();
             ArrayList<Parenthesis_new> simplifiedParen = new ArrayList<Parenthesis_new>();
@@ -133,12 +145,30 @@ public class Simplify_new
             //then use the same method to add them together as is done above then add the arraylist to the other one
             
         }
+        */
         
         return simplified;
     }
-    public static void decompressParenthesis(ArrayList<Equation> toSimplify)
+    public static ArrayList<Equation> decompressParenthesis(ArrayList<Equation> toSimplify)
     {   //I need to make a thing that deals with the "extra" bit of parenthesis
-        for(int indx = 0; indx<toSimplify.size(); indx++)
+        ArrayList<Equation> toReturn = new ArrayList<Equation>();
+        for(Equation tmp: toSimplify)
+        {
+            if(tmp instanceof Parenthesis_new && !(tmp instanceof Parenthesis_fraction))
+            {
+                Parenthesis_new decomp = (Parenthesis_new) tmp;
+                ArrayList<Equation> paren = decomp.toArrayList();
+                for(Equation inside: paren)
+                {
+                        toReturn.add(inside);
+                }
+            }
+            else
+            {
+                toReturn.add(tmp);
+            }
+        }
+        /*for(int indx = 0; indx<toSimplify.size(); indx++)
         {
             if(toSimplify.get(indx) instanceof Parenthesis_new)
             {
@@ -167,8 +197,12 @@ public class Simplify_new
                         toSimplify.add(toAdd);
                     }
                 }
+                
             }
+            
         }
+        */
+        return toReturn;
     }
     public static ArrayList<Equation> removeOperators(ArrayList<Equation> toSimplify)
     {
@@ -178,7 +212,7 @@ public class Simplify_new
             if(test instanceof Nomial_new|| test instanceof Parenthesis_new)
                 noOperators.add(test);
         }
-        return noOperators;
+        return decompressParenthesis(noOperators);
     }
     /**
      * part of the above solveAddition() method, this removes the first object in the 
@@ -286,18 +320,49 @@ public class Simplify_new
                     }
                     if(toMultiply.size()>0)
                     {
-                    simplified.add(multiply(toMultiply));
-                }
+                        simplified.add(multiply(toMultiply));
+                    }
                     break;
                 }
             }
-        }
-        
-        
+        }        
         return simplified;
     }
     public static Equation multiply(ArrayList<Equation> toMultiply)
     {
+        if(haveMultiplication(toMultiply)==true && haveDivision(toMultiply) ==false)
+        {
+            if(haveParenthesis(toMultiply)!=0)
+            {
+                Parenthesis_fraction toReturn = new Parenthesis_fraction(new Nomial_new(1,0).toArrayList(), new Nomial_new(1,0).toArrayList());
+                for(Equation tmp: toMultiply)
+                {
+                    if(tmp instanceof Nomial_new)
+                    {
+                        Nomial_new x = (Nomial_new) tmp;
+                        toReturn.multiplyToCount(x);
+                    }
+                    else if(tmp instanceof Parenthesis_fraction|| tmp instanceof Parenthesis_new)
+                    {
+                        Parenthesis_new x = (Parenthesis_new) tmp;
+                        toReturn.multiplyToCount(x);
+                    }
+                    
+                }
+                return toReturn;
+            }
+            else
+            {
+                Nomial_new toReturn = new Nomial_new(1,0);
+                for(Equation tmp: toMultiply)
+                {
+                    Nomial_new x = (Nomial_new) tmp;
+                    toReturn.multiplyToCount(x.getCount());
+                    toReturn.addToVarExponent(x.getVarExponent());
+                }
+                return toReturn;
+            }
+        }
         return new Nomial_new();
     }
 }

@@ -8,6 +8,16 @@ public class Input_new
 {
     public static void main(String args[])
     {
+        ArrayList<Nomial> x = new ArrayList<Nomial>();
+        x.add(new Nomial(1,0));
+        x.add(new Nomial(1,0));
+        System.out.println(x);
+        for(Nomial tmp: x)
+        {
+            tmp = new Nomial(5,5);
+            
+        }
+        System.out.println(x);
         System.out.println("Type in your equation");
         String originalInput= new Scanner(System.in).nextLine();
         

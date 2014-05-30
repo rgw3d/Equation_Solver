@@ -191,13 +191,6 @@ public class Nomial_new implements Equation
         return constantCount;
     }
     /**
-     * @return boolean  always true. extended class forces this
-     */
-    public boolean canCountInside()
-    {
-        return true;
-    }
-    /**
      * @return true if there is a variable
      */
     public boolean hasVariable()
@@ -206,11 +199,19 @@ public class Nomial_new implements Equation
             return true;
         return false;
     }
-    public void changeCount(double toAdd)
+    public void addToCount(double toAdd)
     {
         constantCount+=toAdd;
     }
-    public int compareTo(Object x)//returns 0 if they are equal
+    public void multiplyToCount(double toMultiply)
+    {
+        constantCount*=toMultiply;
+    }
+    public void addToVarExponent(double toAdd)
+    {
+        varExponent+=toAdd;
+    }
+    public int compareTo(Equation x)//returns 0 if they are equal
     {
         Nomial_new second=(Nomial_new)x;
         int isEqual=-1;        
