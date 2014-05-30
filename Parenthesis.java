@@ -2,8 +2,10 @@
  * extends the Nomial class because it has numbers in it
  */
 import java.util.ArrayList;
-public class Parenthesis implements Number
+public class Parenthesis
 {
+    private ArrayList inside= new ArrayList();
+    private ArrayList<Nomial> insideNoOperators = new ArrayList<Nomial>();
     public Parenthesis(String insideValue)
     {
         //System.out.println("yay"+insideValue);
@@ -26,8 +28,22 @@ public class Parenthesis implements Number
     {
         return insideNoOperators;
     }
-    private ArrayList inside= new ArrayList();
-    private ArrayList<Nomial> insideNoOperators = new ArrayList<Nomial>();
+    public double getVarExponent()
+    {
+        return 1;
+    }
+    public double getCount()
+    {
+        return 1;
+    }
+    public boolean canCountInside()
+    {
+        return true;
+    }
+    public String toString()
+    {
+        return "s";
+    }
     
     
 }

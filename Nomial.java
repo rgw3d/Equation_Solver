@@ -3,7 +3,7 @@
  */
 import java.util.Scanner;
 import java.util.ArrayList;
-public class Nomial extends Number implements Comparable
+public class Nomial implements Comparable
 {
     private String rawInput;
     private double varExponent=0;
@@ -148,9 +148,9 @@ public class Nomial extends Number implements Comparable
         tmp.add(getNomial());
         return tmp;
     }
-    public Nomial getNomial()
+    public Nomial_new getNomial()
     {
-        return new Nomial(getVarExponent(), getCount());
+        return new Nomial_new(getVarExponent(), getCount());
     }
     public boolean hasVar()
     {
